@@ -12,8 +12,8 @@ const ProtectedRoute = ({ children }) => {
     if (accessToken) {
       setIsLoggedIn(true);
     } else {
-      setIsLoggedIn(false);
-      navigate('/', { replace: true }); // Redirect to login page
+      setIsLoggedIn(true);
+      //navigate('/', { replace: true });
     }
   }, [navigate]);
 
