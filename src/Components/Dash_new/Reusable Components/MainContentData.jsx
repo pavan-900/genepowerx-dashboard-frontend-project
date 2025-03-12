@@ -29,6 +29,9 @@ const MainContentData = ({
   selectedBatch,
   concernChecked, // Receive concernChecked state
   setConcernChecked, // Receive setConcernChecked function
+  Concerndata,
+  setconcerndata,
+
 }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [conditionValue, setConditionValue] = useState(null);
@@ -55,7 +58,10 @@ const MainContentData = ({
           console.log("Fetched patient condition data:", data); // Debugging
           console.log("Available keys:", Object.keys(data)); // Debugging keys
           console.log("Selected condition:", selectedCondition); // Debugging selected condition
-  
+
+        const filterdData=Object.keys(data).filter(key=>data[key]==="Yes");
+
+         setconcerndata(prev=>([...filterdData]));
           if (data[selectedCondition]) {
             setConditionValue(data[selectedCondition]);
             setConcernChecked(data[selectedCondition] === "Yes");
@@ -69,6 +75,7 @@ const MainContentData = ({
           console.error("Error fetching condition data:", error);
           setConditionValue(null);
           setConcernChecked(false);
+          setconcerndata({});
         });
     }
   }, [selectedPatient, selectedBatch, selectedCondition]);
