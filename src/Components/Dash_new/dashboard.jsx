@@ -39,6 +39,7 @@ import MultiConditionButton from "./Reusable Components/MultiConditionButton";
 import SideBarContainer from "./Reusable Components/SideBarContainer";
 import MainContentData from "./Reusable Components/MainContentData";
 import ReportHandleButton from "./Reusable Components/ReportHandleButton";
+import ConcernButton from "./Reusable Components/ConcernButton";
 
 const Task = ({ id, title }) => {
   const { attribute, listeners, setNodeRef, transform, transition } =
@@ -76,10 +77,10 @@ const Dashboard = () => {
   const [reason, setReason] = useState();
   const [submittedConditions, setSubmittedConditions] = useState([]); // Track submitted conditions
   const [removedCondition, setRemovedCondition] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState("Batch1"); // Store selected batch
+  const [selectedBatch, setSelectedBatch] = useState("Batch4_Jan_2025"); // Store selected batch
   const [submittedData, setSubmittedData] = useState([]);
   const [concernChecked, setConcernChecked] = useState(false); // Add concernChecked state
-  
+  const [Concerndata,setconcerndata]=useState([]);
 
   useEffect(() => {
     const storedColumns = localStorage.getItem("selectedColumns");
@@ -282,7 +283,8 @@ const Dashboard = () => {
   // UseEffect to call the fetchDataFromAPIs function when the component mounts
   useEffect(() => {
     fetchDataFromAPIs();
-  }, []); // Ensuring this is only called once
+  }, []);
+   // Ensuring this is only called once
 
   // Render loading, error, or the data
   if (error) {
@@ -574,6 +576,9 @@ const Dashboard = () => {
             RenderTabViewContent={RenderTabViewContent}
             sidebarprefer={sidebarprefer}
           />
+       <ConcernButton 
+Concerndata={Concerndata}       
+       />
 
           {/* Dialog Popup */}
           <ReportHandleButton
@@ -643,6 +648,7 @@ const Dashboard = () => {
                   selectedBatch={selectedBatch}
                   concernChecked={concernChecked} // Pass concernChecked state
                   setConcernChecked={setConcernChecked} // Pass setConcernChecked function
+                  setconcerndata={setconcerndata}
                 />
               </div>
 
