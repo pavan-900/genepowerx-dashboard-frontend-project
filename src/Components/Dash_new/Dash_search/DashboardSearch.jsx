@@ -32,11 +32,11 @@ const DashboardSearch = ({ onSelectPatient, fetchDataFromAPIs, selectedBatch, se
     setFilteredPatients([]);
     setSelectedPatient(null); // Clear patient selection on batch change
 
-    try {
-      await fetchDataFromAPIs(batch);
-    } catch (err) {
-      setError(`Failed to load data: ${err.message}`);
-    }
+    // try {
+    //   // await fetchDataFromAPIs(batch);
+    // } catch (err) {
+    //   setError(`Failed to load data: ${err.message}`);
+    // }
   };
 
   const handleSearch = (event) => {
