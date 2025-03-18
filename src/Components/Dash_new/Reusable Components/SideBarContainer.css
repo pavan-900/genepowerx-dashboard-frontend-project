@@ -1,42 +1,65 @@
+/* Sidebar content container */
+.sidebar-content {
+  display: grid;
+  grid-template-columns: repeat(2, 4fr); /* Two equal columns */
+  gap: 5px; /* Space between boxes */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 /* Sidebar button styles */
 .sidebar-button {
-  background-color: #063767; /* Darker background color for buttons */
-  color: white; /* Button text color */
-  padding: 12px;
+  background-color: #063767; /* Default dark background */
+  color: white;
+  padding: 6px; /* Adjust padding */
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 9px;
-  text-align: left; /* Align text to the left */
+  font-size: 9px; /* Reduce text size */
+  text-align: left;
   transition: background-color 0.3s ease;
-  width: 48%; /* Make the button take full width of the sidebar */
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px; /* Reduce gap between icon & text */
   justify-content: center;
   align-items: center;
-  margin: 1px;
+  width: 100%; /* Ensure equal size for both columns */
+  height: 75px; /* Adjust height */
   overflow-wrap: break-word;
+  margin: 1px;
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
-/* Selected button styles */
+/* Concern Highlighting */
+.sidebar-button.concerned {
+  background-color: orange !important;
+  color: white !important;
+}
+
+/* Selected & Submitted Styles */
 .sidebar-button.selected {
-  background-color: #1abc9c; /* Background color for selected button */
+  background-color: #1abc9c !important;
 }
 
 .sidebar-button.submitted {
-  background-color: #28a745; /* Green background for submitted conditions */
+  background-color: #28a745 !important;
 }
 
 .sidebar-button:hover {
-  background-color: #1abc9c; /* Lighter hover color */
+  background-color: #1abc9c !important;
 }
 
+/* Icons inside buttons */
 .condition-icons {
-  /* height: 50px; */
+  height: 30px; /* Reduce icon size */
+  width: 30px;
+  filter: brightness(0) invert(1);
 }
 
-.condition-icons {
-  height: 30px;
-  filter: brightness(0) invert(1); /* Makes the image white */
+.sidebar-button span {
+  font-size: 11px;
+  line-height: 10px;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
