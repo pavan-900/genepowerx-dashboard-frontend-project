@@ -7,6 +7,8 @@ const ReportHandleButton = ({
   setSubmittedData,
   handleRemove,
   handleDownload,
+  fetchBatches, // Add fetchBatches as a prop
+  fetchReportStatus, // Add fetchReportStatus as a prop
 }) => {
   const [visibleData, setVisibleData] = useState(false);
 
@@ -30,7 +32,7 @@ const ReportHandleButton = ({
       >
         <div className="popup-content">
           {submittedData.length === 0 ? (
-            <p>No data submitted yet.</p>
+            <p>No data to submit.</p>
           ) : (
             <div
               style={{
@@ -110,13 +112,26 @@ const ReportHandleButton = ({
           )}
         </div>
 
-        {/* Download Button - Clears Data After Download */}
+        {/* Submit Button */}
         <div className="download-section">
           <Button
-            label="Download"
-            onClick={() => {
-              handleDownload();
-              handleRemoveAll();
+            label="Submit"
+            onClick={async () => {
+              try {
+                // Step 1: Immediately update the UI
+                setVisibleData(false); // Close the dialog
+                handleRemoveAll(); // Clear submitted data
+                alert("Data has been successfully submitted!"); // Show success message
+
+                // Step 2: Perform the download and API calls in the background
+                await handleDownload(); // Ensure download completes
+
+                // Step 3: Fetch updated batches and report status
+                fetchBatches(); // Call get-batches
+                fetchReportStatus(); // Call get-report-status
+              } catch (error) {
+                alert("Submission failed. Please try again.");
+              }
             }}
           />
         </div>
@@ -126,3 +141,4 @@ const ReportHandleButton = ({
 };
 
 export default ReportHandleButton;
+
