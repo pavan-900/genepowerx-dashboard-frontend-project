@@ -361,6 +361,22 @@ button {
   animation: l11-3 2s cubic-bezier(0, 400, 1, 400) infinite;
 }
 
+.custom-upload-button {
+  background-color: #007bff !important; /* Match Multi Conditions button */
+  color: white !important;
+  border-radius: 6px; /* Slightly rounded */
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-upload-button:hover {
+  background-color: #0056b3 !important; /* Darker blue on hover */
+  transform: scale(1.05);
+}
 @keyframes l11-1 {
   100% {
     top: -0.2px;
