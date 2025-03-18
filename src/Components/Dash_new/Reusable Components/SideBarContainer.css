@@ -52,14 +52,16 @@
 
 /* Icons inside buttons */
 .condition-icons {
-  height: 30px; /* Reduce icon size */
-  width: 30px;
+  height: 28px; /* Reduce icon size */
+  width: 28px;
   filter: brightness(0) invert(1);
 }
 
+/* Button text */
 .sidebar-button span {
-  font-size: 11px;
+  font-size: 9px;
   line-height: 10px;
   max-width: 100%;
   overflow-wrap: break-word;
+  text-align: center; /* Center the text */
 }
