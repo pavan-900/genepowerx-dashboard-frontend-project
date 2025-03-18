@@ -1,3 +1,4 @@
+
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -98,11 +99,59 @@ const Dashboard = () => {
   const [data, setData] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [error, setError] = useState(null);
+  const [pdfPopupVisible, setPdfPopupVisible] = useState(false);
+  const [uploadedPdfs, setUploadedPdfs] = useState([]); // Store uploaded PDFs
   
-
+    const fetchBatches = async () => {
+      try {
+        const response = await fetch("https://genepowerx-backend.onrender.com/get-batches");
+        if (!response.ok) throw new Error("Failed to fetch batches");
+        const data = await response.json();
+        setBatches(data || {});
+      } catch (error) {
+        console.error("Error fetching batches:", error);
+      }
+    };
   const handleSelectPatient = (patient) => {
-    setSelectedPatient(patient);
+    setSelectedPatient(patient); // ✅ Set selected patient
   };
+  const fetchReportStatus = async () => {
+    try {
+      const response = await fetch(`https://genepowerx-backend.onrender.com/get-report-status?batch_name=${selectedBatch}`);
+      if (!response.ok) throw new Error("Failed to fetch report status");
+  
+      const data = await response.json();
+      setReportStatus(data);
+      setAvailabilityStatus(data);
+    } catch (error) {
+      console.error("Error fetching report status:", error);
+    }
+  };
+  
+const handlePdfUpload = async (event) => {
+  const files = event.target.files;
+  const formData = new FormData();
+  
+  for (let file of files) {
+    formData.append("pdfs", file);
+  }
+
+  try {
+    const response = await fetch(`https://genepowerx-backend.onrender.com/upload-pdf?batch_name=${selectedBatch}&patient_id=${selectedPatient}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Failed to upload PDFs");
+
+    alert("PDFs uploaded successfully!");
+    fetchBloodReports(); // Refresh the list after upload
+
+  } catch (error) {
+    console.error("❌ PDF Upload Error:", error.message);
+  }
+};
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -234,8 +283,7 @@ const Dashboard = () => {
       aiScore: entry.aiScore || "",
       reason: entry.reason || "",
     }));
-
-    const response = await fetch("https://genepowerx-backend.onrender.com/excel-download", {
+ const response = await fetch("https://genepowerx-backend.onrender.com/excel-download", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ headers, data, selectedPatient, selectedBatch }),
@@ -245,9 +293,10 @@ const Dashboard = () => {
 
     // ✅ Show a simple popup notification
     console.log(selectedPatient);
-    alert(`${selectedPatient}_Scoring_chart.xlsx has been saved to reports`);
+    //alert(`${selectedPatient}_Scoring_chart.xlsx has been saved to reports`);
   };
 
+   
   // Function to fetch data from both APIs
   const fetchDataFromAPIs = async () => {
     try {
@@ -557,12 +606,38 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="card_navbar">
         <img src={SvgImage} alt="" />
-        <DashboardSearch
-          onSelectPatient={handleSelectPatient}
-          fetchDataFromAPIs={fetchDataFromAPIs}
-          selectedBatch={selectedBatch}
-          setSelectedBatch={setSelectedBatch}
-        />
+        <DashboardSearch 
+          onSelectPatient={handleSelectPatient} 
+          fetchDataFromAPIs={fetchDataFromAPIs} 
+          selectedBatch={selectedBatch} 
+          setSelectedBatch={setSelectedBatch} 
+      />
+        <Dialog
+              header="Uploaded PDFs"
+              visible={pdfPopupVisible}
+              style={{ width: "50vw" }}
+              onHide={() => setPdfPopupVisible(false)}
+            >
+              <input type="file" accept="application/pdf" multiple onChange={handlePdfUpload} />
+              <ul>
+                {uploadedPdfs.map((pdf, index) => (
+                  <li key={index}>
+                    <a href={pdf.url} target="_blank" rel="noopener noreferrer">
+                      {pdf.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </Dialog>
+
+              <div className="pdf-files"> 
+                <Button
+                  icon="pi pi-file-pdf"
+                  label="Upload PDF Files"
+                  className="custom-upload-button"
+                  onClick={() => setPdfPopupVisible(true)}
+                />
+      </div>
         <div className="right_items">
           <div className="fullscreen" onClick={toggleFullScreen}>
             <img
@@ -576,17 +651,19 @@ const Dashboard = () => {
             RenderTabViewContent={RenderTabViewContent}
             sidebarprefer={sidebarprefer}
           />
-       <ConcernButton 
+       {/* <ConcernButton 
 Concerndata={Concerndata}       
-       />
+       /> */}
 
           {/* Dialog Popup */}
           <ReportHandleButton
-            submittedData={submittedData}
-            setSubmittedData={setSubmittedData}
-            handleRemove={handleRemove}
-            handleDownload={handleDownload}
-          />
+          submittedData={submittedData}
+          setSubmittedData={setSubmittedData}
+          handleRemove={handleRemove}
+          handleDownload={handleDownload}
+          fetchBatches={fetchBatches} // Pass fetchBatches as a prop
+          fetchReportStatus={fetchReportStatus} // Pass fetchReportStatus as a prop
+        />
 
           <div className="Back">
             <Button
@@ -595,7 +672,7 @@ Concerndata={Concerndata}
               onClick={handlegotocol}
             />
           </div>
-          <div
+          {/* <div
             className="user_pi"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
@@ -605,7 +682,7 @@ Concerndata={Concerndata}
               onClick={handlelogout}
               title={hovered ? "logout" : ""}
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -617,7 +694,7 @@ Concerndata={Concerndata}
               {/* Sidebar container */}
               {sidebarprefer && (
                 <div className="card sidebar">
-                  <SideBarContainer
+                 <SideBarContainer
                     visibleleft={visibleleft}
                     setVisibleleft={setVisibleleft}
                     sidebarprefer={sidebarprefer}
@@ -626,6 +703,7 @@ Concerndata={Concerndata}
                     removedCondition={removedCondition} // Pass removed condition
                     setSubmittedConditions={setSubmittedConditions}
                     selectedPatient={selectedPatient}
+                    Concerndata={Concerndata} // Pass Concerndata
                   />
                 </div>
               )}
