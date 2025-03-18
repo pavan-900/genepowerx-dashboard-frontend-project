@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./SideBarContainer.css"; // Import the CSS file
+import "./SideBarContainer.css";
 
 const SideBarContainer = ({
   visibleleft,
@@ -7,16 +7,16 @@ const SideBarContainer = ({
   sidebarprefer,
   handleSingleCodnition,
   submittedConditions,
-  setSubmittedConditions, // Ensure this is passed from parent
+  setSubmittedConditions,
   removedCondition,
-  selectedPatient, // Pass selectedPatient as a prop
+  selectedPatient,
+  Concerndata = [], // Ensure default value is an array
 }) => {
   const [selectedPreference, setSelectedPreference] = useState(null);
 
   useEffect(() => {
-    // Reset selected preference and submitted conditions when patient changes
     setSelectedPreference(null);
-    setSubmittedConditions([]); // Reset submitted conditions here
+    setSubmittedConditions([]);
   }, [selectedPatient]);
 
   const handleClick = (title) => {
@@ -26,15 +26,7 @@ const SideBarContainer = ({
 
   return (
     <div className={`sidebar-container ${visibleleft ? "visible" : ""}`}>
-      <div
-        className="sidebar-content"
-        style={{
-          width: "100%",
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
+      <div className="sidebar-content">
         {sidebarprefer.map((preference, index) => (
           <button
             key={index}
@@ -42,23 +34,15 @@ const SideBarContainer = ({
               selectedPreference === preference.title ? "selected" : ""
             } ${
               submittedConditions.includes(preference.title) ? "submitted" : ""
+            } ${
+              Array.isArray(Concerndata) && Concerndata.includes(preference.title)
+                ? "concerned"
+                : ""
             }`}
             onClick={() => handleClick(preference.title)}
           >
-            <img
-              src={preference.icon}
-              className="condition-icons"
-              alt={preference.title}
-            />
-            <span
-              style={{
-                width: "100%",
-                wordWrap: "break-word",
-                textAlign: "center",
-              }}
-            >
-              {preference.title}
-            </span>
+            <img src={preference.icon} className="condition-icons" alt={preference.title} />
+            <span>{preference.title}</span>
           </button>
         ))}
       </div>
